@@ -1,0 +1,161 @@
+-- STUDENTS WHO ARE SHARING SIMILAR MOVIE GENRES
+
+SELECT 
+    ->     g.GenreName,
+    ->     s.Name AS StudentName
+    -> FROM 
+    ->     MovieInterestsOfStudents mis
+    -> JOIN 
+    ->     Genres g ON mis.GenreID = g.GenreID
+    -> JOIN 
+    ->     Students s ON mis.StudentID = s.StudentID
+    -> ORDER BY 
+    ->     g.GenreName, s.Name;
++-----------------+-------------+
+| GenreName       | StudentName |
++-----------------+-------------+
+| Action          | Razickar    |
+| Documentary     | Mugesh      |
+| Documentary     | Nivedha     |
+| Horror          | Kiruthika   |
+| Horror          | Parvathi    |
+| Romantic-Comedy | Bala        |
+| Romantic-Comedy | Rufus       |
+| Science Fiction | Lakshmi     |
+| Science Fiction | Shabareesh  |
++-----------------+-------------+
+
+-- STUDENTS GROUP BY THEIR FAVORITE ACTOR
+
+SELECT 
+    ->     favorite_actor,
+    ->     GROUP_CONCAT(Name ORDER BY Name) AS Fans
+    -> FROM 
+    ->     student_favorites sf
+    -> JOIN 
+    ->     Students s ON sf.StudentID = s.StudentID
+    -> GROUP BY 
+    ->     favorite_actor;
++-----------------+-------------------------+
+| favorite_actor  | Fans                    |
++-----------------+-------------------------+
+| Ajith Kumar     | Kiruthika,Nivedha,Rufus |
+| Dhanush         | Lakshmi                 |
+| Sivakarthikeyan | Razickar,Shabareesh     |
+| Vijay           | Bala,Mugesh,Parvathi    |
++-----------------+-------------------------+
+-- COMMON FAVORITE BEACHES
+SELECT 
+    s1.Name AS Student1,
+    s2.Name AS Student2,
+    b.beach_name AS CommonBeach
+FROM 
+    student_fav_beaches sb1
+JOIN 
+    student_fav_beaches sb2 ON sb1.beach_id = sb2.beach_id AND sb1.StudentID < sb2.StudentID
+JOIN 
+    Students s1 ON sb1.StudentID = s1.StudentID
+JOIN 
+    Students s2 ON sb2.StudentID = s2.StudentID
+JOIN 
+    beaches b ON sb1.beach_id = b.beach_id
+ORDER BY 
+    b.beach_name;
+-- COMMON FAVORITE MOVIES
+SELECT 
+    ->     s1.Name AS Student1,
+    ->     s2.Name AS Student2,
+    ->     m.movie_name AS CommonMovie
+    -> FROM 
+    ->     student_fav_movies f1
+    -> JOIN 
+    ->     student_fav_movies f2 ON f1.movie_id = f2.movie_id AND f1.StudentID < f2.StudentID
+    -> JOIN 
+    ->     Students s1 ON f1.StudentID = s1.StudentID
+    -> JOIN 
+    ->     Students s2 ON f2.StudentID = s2.StudentID
+    -> JOIN 
+    ->     movies m ON f1.movie_id = m.movie_id
+    -> ORDER BY 
+    ->     m.movie_name;
++-----------+----------+---------------+
+| Student1  | Student2 | CommonMovie   |
++-----------+----------+---------------+
+| Kiruthika | Nivedha  | Good Bad Ugly |
+| Bala      | Parvathi | Jana Nayagan  |
++-----------+----------+---------------+
+-- TOP 5 FAVORITE MOVIES
+SELECT 
+    ->     m.movie_name,
+    ->     COUNT(*) AS Votes
+    -> FROM 
+    ->     student_fav_movies sfm
+    -> JOIN 
+    ->     movies m ON sfm.movie_id = m.movie_id
+    -> GROUP BY 
+    ->     m.movie_name
+    -> ORDER BY 
+    ->     Votes DESC
+    -> LIMIT 5;
++---------------+-------+
+| movie_name    | Votes |
++---------------+-------+
+| Jana Nayagan  |     2 |
+| Good Bad Ugly |     2 |
+| Kuberaa       |     1 |
+| Retro         |     1 |
+| Thug Life     |     1 |
++---------------+-------+
+-- WHO LOVES ROMANTIC COMEDY MOVIES
+SELECT 
+    ->     s.StudentID,
+    ->     s.Name
+    -> FROM 
+    ->     MovieInterestsOfStudents mis
+    -> JOIN 
+    ->     Students s ON mis.StudentID = s.StudentID
+    -> WHERE 
+    ->     mis.GenreID = 1;
++-----------+-------+
+| StudentID | Name  |
++-----------+-------+
+|         1 | Bala  |
+|         8 | Rufus |
++-----------+-------+
+-- TOP FAVORITE ACTOR
+SELECT 
+    ->     favorite_actor,
+    ->     COUNT(*) AS total_fans
+    -> FROM 
+    ->     student_favorites
+    -> GROUP BY 
+    ->     favorite_actor
+    -> ORDER BY 
+    ->     total_fans DESC;
++-----------------+------------+
+| favorite_actor  | total_fans |
++-----------------+------------+
+| Vijay           |          3 |
+| Ajith Kumar     |          3 |
+| Sivakarthikeyan |          2 |
+| Dhanush         |          1 |
++-----------------+------------+
+
+--MOVIE CAN MOST PEOPLE WATCH TOGETHER
+SELECT 
+    ->     m.movie_name,
+    ->     COUNT(*) AS total_fans
+    -> FROM 
+    ->     student_fav_movies sfm
+    -> JOIN 
+    ->     movies m ON sfm.movie_id = m.movie_id
+    -> GROUP BY 
+    ->     m.movie_name
+    -> ORDER BY 
+    ->     total_fans DESC
+    -> LIMIT 1;
++--------------+------------+
+| movie_name   | total_fans |
++--------------+------------+
+| Jana Nayagan |          2 |
++--------------+------------+
