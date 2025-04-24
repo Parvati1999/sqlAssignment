@@ -159,3 +159,47 @@ SELECT
 +--------------+------------+
 | Jana Nayagan |          2 |
 +--------------+------------+
+---------------cricket self join table
+select*from CricPlayers;
++----------+------------------+-----------+
+| PlayerID | PlayerName       | CaptainID |
++----------+------------------+-----------+
+|       10 | David Miller     |        13 |
+|       11 | Mohammad Shami   |        45 |
+|       13 | Temba Bavuma     |        13 |
+|       18 | Virat Kohli      |        45 |
+|       22 | Kane Williamson  |        74 |
+|       23 | Glenn Phillips   |        74 |
+|       29 | Kagiso Rabada    |        13 |
+|       45 | Rohit Sharma     |        45 |
+|       74 | Mitchell Santner |        74 |
+|       93 | Jasprit Bumrah   |        45 |
+|       96 | Shreyas Iyer     |        45 |
++----------+------------------+-----------+
+11 rows in set (0.01 sec)
+
+mysql> SELECT 
+    ->     p1.PlayerID, 
+    ->     p1.PlayerName, 
+    ->     p2.PlayerName AS CaptainName
+    -> FROM 
+    ->     CricPlayers p1
+    -> JOIN 
+    ->     CricPlayers p2
+    -> ON 
+    ->     p1.CaptainID = p2.PlayerID;
++----------+------------------+------------------+
+| PlayerID | PlayerName       | CaptainName      |
++----------+------------------+------------------+
+|       10 | David Miller     | Temba Bavuma     |
+|       11 | Mohammad Shami   | Rohit Sharma     |
+|       13 | Temba Bavuma     | Temba Bavuma     |
+|       18 | Virat Kohli      | Rohit Sharma     |
+|       22 | Kane Williamson  | Mitchell Santner |
+|       23 | Glenn Phillips   | Mitchell Santner |
+|       29 | Kagiso Rabada    | Temba Bavuma     |
+|       45 | Rohit Sharma     | Rohit Sharma     |
+|       74 | Mitchell Santner | Mitchell Santner |
+|       93 | Jasprit Bumrah   | Rohit Sharma     |
+|       96 | Shreyas Iyer     | Rohit Sharma     |
++----------+------------------+------------------+
